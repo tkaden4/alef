@@ -15,38 +15,64 @@ import util;
    1. Add error information
    2. Track line numbers
    3. Optimize through richer metadata about parsing rules
+   4. Ignored rules, debugging info (lookahead-k, time, etc.)
  */
 
-/* XXX too specific */
-alias TokenRange = LookaheadRange!(typeof("".lex));
+final class ParseException : Exception { mixin basicExceptionCtors; }
 
 template isTokenRange(R)
 {
     enum isTokenRange = isInputRange!R && is(ElementType!R == Token);
 }
 
-auto parse(R)(auto ref R inputRange)
+/* XXX too specific generalize over the range */
+alias TokenRange = ResetRange!(LookaheadRange!(typeof("".lex)));
+
+/* some helpful aliases */
+alias parseAtLeastN(size_t n, alias rule) = parseAnd!(parseN!(n, rule), parseAnyAmount!rule);
+alias parseOptional(alias rule) = parseOr!(rule, nothingRule);
+
+auto parse(R)(auto ref R range)
     if(isInputRange!R)
 {
-    auto range = inputRange.lookaheadRange;
-    return range.parseProgram;
+    auto parseRange = range.resetRange;
+    return parseRange.parseProgram;
 }
 
 /* XXX too specific */
 auto parseToken(Token.Type type)(ref TokenRange range)
 {
-    enforce(
+    enforceEx!ParseException(
         range.front.type == type,
-        "expected %s, but got %s".format(type, range.front.type)
+        "expected token of type %s, but got %s :: %s"
+            .format(type, range.front.lexeme, range.front.type)
     );
     return range.popNext.lexeme;
 }
 
+/* TODO determine embiguity */
 auto parseOr(Args...)(ref TokenRange range)
 {
     auto result = Algebraic!(staticMap!(ReturnType, Args))();
-    auto nrange = range.resetRange;
+    foreach(x; Args){
+        try {
+            result = x(range);
+        } catch(ParseException e) {
+            range.reset;
+        }
+    }
+    enforceEx!ParseException(result.hasValue, "unable to determine result in parseOr");
     return result;
+}
+
+unittest
+{
+    auto x = "9 9".lex.resetRange;
+    auto res = x.parseOr!(
+        parseToken!(Token.Type.STRING),
+        parseToken!(Token.Type.INTEGER),
+        parseToken!(Token.Type.EOS));
+    assert(res.get!(2) == "9", "invalid result");
 }
 
 auto parseAnd(Args...)(ref TokenRange range)
@@ -58,9 +84,6 @@ auto parseAnd(Args...)(ref TokenRange range)
     return result;
 }
 
-/* some helpful aliases */
-alias parseAtLeastN(size_t n, alias rule) = parseAnd!(parseN!(n, rule), parseAnyAmount!rule);
-alias parseOptional(alias rule) = parseOr!(rule, nothingRule);
 
 auto parseN(size_t n, alias rule)(ref TokenRange range)
 {
@@ -90,12 +113,8 @@ auto parseAnyAmount(alias rule)(ref TokenRange range)
     return results;
 }
 
-/* always returns */
-auto nothingRule(ref TokenRange range)
-{
-    /* XXX consider not making it an empty tuple */
-    return tuple();
-}
+/* represents epsilon in formal parsing, and always succeeds */
+auto nothingRule(ref TokenRange range){ return tuple(); }
 
 auto parseProgram(ref TokenRange range)
 {

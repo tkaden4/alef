@@ -10,6 +10,14 @@ import util;
 
 enum usage = "Usage: alephc [-o <out>] <*.al>...";
 
+auto compile(R)(auto ref R files)
+    if(isInputRange!R && isSomeString!(ElementType!R))
+{
+    foreach(x; files){
+        x.compile;
+    }
+}
+
 auto compile(R)(auto ref R file)
     if(isSomeString!R)
 {
@@ -33,14 +41,18 @@ int main(string[] args)
     auto outfile = "out.c";
     auto include = ".";
 
-    auto helpInfo = getopt(
-        args,
-        std.getopt.config.caseSensitive,
-        "include|I", &include,
-        "out|o", &outfile
-    );
-    if(helpInfo.helpWanted){
-        defaultGetoptPrinter(usage, helpInfo.options);
+    /* parse arguments */
+    {
+        auto helpInfo = getopt(
+            args,
+            std.getopt.config.caseSensitive,
+            "include|I", &include,
+            "out|o", &outfile
+        );
+
+        if(helpInfo.helpWanted){
+            defaultGetoptPrinter(usage, helpInfo.options);
+        }
     }
 
     /* expand relative paths */
@@ -54,12 +66,12 @@ int main(string[] args)
         "output file %s already exists".writefln(outfile);
     }
 
-    debug writefln("include dir: " ~ include);
-    debug writefln("output file: " ~ outfile);
-
-    foreach(x; args.drop(1)){
-        x.compile;
+    debug {
+        writefln("include dir: " ~ include);
+        writefln("output file: " ~ outfile);
     }
+
+    args.drop(1).compile;
 
     return 0;
 }

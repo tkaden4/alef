@@ -9,3 +9,9 @@ speed, or portability; it compiles to C itself.
 Aleph depends on Flex for scanner generation, and a custom
 parser that sits on top of the flex scanner. A transition
 to Bison may be made in the future.
+
+## Current Goals ##
+- [ ] Finish Lexer
+- [ ] Finish Parser
+- [ ] Finish pattern matcher
+- [ ] Semantic Analyzer
