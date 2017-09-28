@@ -14,12 +14,12 @@ template isLookaheadRange(R)
 
 /* Create a range that allows caching of arbitrary lookahead */
 
-public auto ref lookaheadRange(R)(auto ref R range)
+auto ref lookaheadRange(R)(auto ref R range)
 {
     return LookaheadRange!R(range);
 }
 
-public struct LookaheadRange(R)
+struct LookaheadRange(R)
     if(isInputRange!R)
 {
     private ElementType!R[] cache = void;
@@ -27,17 +27,12 @@ public struct LookaheadRange(R)
 
     @disable this();
 
-    /* range functions */
-
-    this(ref R range)
+    this(in R range)
     {
         this.range = range;
     }
 
-    auto opIndex(size_t n)
-    {
-        return this.lookahead(n);
-    }
+    alias opIndex = lookahead;
 
     void popFront()
     {

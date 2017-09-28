@@ -7,7 +7,9 @@ import std.traits;
 import std.stdio;
 
 public import util.LookaheadRange;
+public import util.ResetRange;
 public import util.visit;
+public import util.meta;
 
 /* Utility Functions */
 
