@@ -66,11 +66,9 @@ auto ref popNext(R)(auto ref R range)
     import std.exception;
     import std.stdio;
     enforce(!range.empty, "unable to popNext from emtpy range");
-    with(range){
-        auto ret = front;
-        popFront;
-        return ret;
-    }
+    auto ret = range.front;
+    range.popFront;
+    return ret;
 }
 
 auto fastCast(T, F)(auto ref F f)

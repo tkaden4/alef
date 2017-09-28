@@ -6,7 +6,6 @@ import std.algorithm;
 import std.stdio;
 
 import util;
-import flex;
 
 /* Lexer module */
 
@@ -33,11 +32,27 @@ struct Location {
 
 struct Token {
     enum Type : uint {
+        EOS = 0,
+        /* Primitives */
         STRING,
         INTEGER,
         DOUBLE,
         CHAR,
-        EOS
+        /* Keywords */
+        PROC,
+        STRUCT,
+        INT,
+        /* Punctuation */
+        OPAREN,
+        CPAREN,
+        OBRACE,
+        CBRACE,
+        SEMI,
+        RARROW,
+        COLON,
+        COMMA,
+        /* etc. */
+        ID,
     };
 
     Type type;

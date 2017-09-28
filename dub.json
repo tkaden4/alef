@@ -7,8 +7,5 @@
 	"copyright": "Copyright © 2017, kaden",
 	"license": "proprietary",
     "dependencies": {
-        "openmethods": "~>1.0.0"
-    },
-    "preBuildCommands": ["make -C lexer"],
-    "sourceFiles": ["./lexer/llex.so"]
+    }
 }

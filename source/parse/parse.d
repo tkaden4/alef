@@ -16,6 +16,11 @@ import util;
    2. Track line numbers
    3. Optimize through richer metadata about parsing rules
    4. Ignored rules, debugging info (lookahead-k, time, etc.)
+
+   determining ambiguity:
+       Add information that provides us with lists of tokens for each production.
+       This may be difficult to deal with when using recursive rules. It may help
+       to 
  */
 
 final class ParseException : Exception { mixin basicExceptionCtors; }
@@ -27,7 +32,6 @@ template isTokenRange(R)
 
 /* XXX too specific generalize over the range */
 alias TokenRange = ResetRange!(LookaheadRange!(typeof("".lex)));
-//alias TokenRange(R) = ResetRange!(LookaheadRange!(R));
 
 /* some helpful aliases */
 alias parseAtLeastN(size_t n, alias rule) = parseAnd!(parseN!(n, rule), parseAnyAmount!rule);
@@ -51,7 +55,7 @@ auto parseToken(Token.Type type)(ref TokenRange range)
     return range.popNext.lexeme;
 }
 
-/* TODO determine ambiguity */
+/* TODO determine ambiguity between rules */
 auto parseOr(Args...)(ref TokenRange range)
 {
     auto result = Algebraic!(staticMap!(ReturnType, Args))();
@@ -104,7 +108,7 @@ auto parseN(size_t n, alias rule)(ref TokenRange range)
 auto parseAnyAmount(alias rule)(ref TokenRange range)
 {
     ReturnType!rule[] results;
-    for(;;){
+    while(!range.empty){
         auto result = range.parseOptional!rule; 
         if(!result.hasValue){
             break;
@@ -114,7 +118,7 @@ auto parseAnyAmount(alias rule)(ref TokenRange range)
     return results;
 }
 
-/* represents epsilon in formal parsing, and always succeeds */
+/* always succeeds */
 auto nothingRule(ref TokenRange range){ return tuple(); }
 
 auto parseProgram(ref TokenRange range)
