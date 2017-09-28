@@ -27,6 +27,7 @@ template isTokenRange(R)
 
 /* XXX too specific generalize over the range */
 alias TokenRange = ResetRange!(LookaheadRange!(typeof("".lex)));
+//alias TokenRange(R) = ResetRange!(LookaheadRange!(R));
 
 /* some helpful aliases */
 alias parseAtLeastN(size_t n, alias rule) = parseAnd!(parseN!(n, rule), parseAnyAmount!rule);
@@ -50,14 +51,19 @@ auto parseToken(Token.Type type)(ref TokenRange range)
     return range.popNext.lexeme;
 }
 
-/* TODO determine embiguity */
+/* TODO determine ambiguity */
 auto parseOr(Args...)(ref TokenRange range)
 {
     auto result = Algebraic!(staticMap!(ReturnType, Args))();
     foreach(x; Args){
         try {
             result = x(range);
+            break;
         } catch(ParseException e) {
+            debug {
+                import std.stdio;
+                "condition failed".writeln;
+            }
             range.reset;
         }
     }
@@ -69,7 +75,7 @@ unittest
 {
     auto x = "9 9".lex.resetRange;
     auto res = x.parseOr!(
-        parseToken!(Token.Type.STRING),
+        parseAnd!(parseToken!(Token.Type.EOS), parseToken!(Token.Type.STRING)),
         parseToken!(Token.Type.INTEGER),
         parseToken!(Token.Type.EOS));
     assert(res.get!(2) == "9", "invalid result");
@@ -100,15 +106,10 @@ auto parseAnyAmount(alias rule)(ref TokenRange range)
     ReturnType!rule[] results;
     for(;;){
         auto result = range.parseOptional!rule; 
-        try {
-            results ~= result.get!0;
-        } catch(VariantException e) {
-            debug {
-                import std.stdio;
-                "optional was null".writeln;
-            }
+        if(!result.hasValue){
             break;
         }
+        results ~= result.get!(ReturnType!rule);
     }
     return results;
 }
@@ -118,10 +119,6 @@ auto nothingRule(ref TokenRange range){ return tuple(); }
 
 auto parseProgram(ref TokenRange range)
 {
-    return range.parseAnyAmount!parseExpression;
-}
-
-auto parseExpression(ref TokenRange range)
-{
-    return tuple("string");
+    //return range.parseAnyAmount!parseExpression;
+    return range.parseAnyAmount!(parseToken!(Token.Type.EOS));
 }
