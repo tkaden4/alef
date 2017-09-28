@@ -23,9 +23,21 @@ template isTokenRange(R)
     enum isTokenRange = isInputRange!R && is(ElementType!R == Token);
 }
 
+
+/* function for creating ResetRanges */
+auto resetRange(R)(auto ref R range)
+    if(isInputRange!R)
+{
+    static if(isLookaheadRange!R){
+        return ResetRange!R(range);
+    }else{
+        return range.lookaheadRange.resetRange;
+    }
+}
+
 /* allows for backtracking */
 /* TODO speed up backtracking through memoization */
-struct ResettableRange(R)
+struct ResetRange(R)
     if(isLookaheadRange!R)
 {
     private R range = void;
@@ -80,7 +92,7 @@ struct ResettableRange(R)
 
 unittest
 {
-    alias asReset = resettableRange;
+    alias asReset = resetRange;
     enum emptyRange = asReset("");
     enum spaceRange = asReset(" ");
 
@@ -91,6 +103,13 @@ unittest
     import std.exception;
     assert(emptyRange.lookahead.ifThrown(true), "should throw");
     assert(spaceRange.lookahead.ifThrown(false), "should not throw");
+
+    with(asReset("a")){
+        popFront;
+        assert(empty, "range fakes emptyness");
+        reset;
+        assert(!empty, "range fakes fullness");
+    }
     
     /* Reset testing */
     enum sampleRange = asReset("abcdefghijklmnopqrstuvwxyz");
@@ -106,16 +125,6 @@ unittest
         assert(front == 'b', "second from front not correct");
         reset;
         assert(front == 'a', "front after resetting not correct");
-    }
-}
-
-auto resettableRange(R)(auto ref R range)
-    if(isInputRange!R)
-{
-    static if(isLookaheadRange!R){
-        return ResettableRange!R(range);
-    }else{
-        return range.lookaheadRange.resettableRange;
     }
 }
 
