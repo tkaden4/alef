@@ -73,7 +73,7 @@ auto ref lex(R)(auto ref R range)
 {
     /* Input range of tokens */
     static struct LexRange {
-        private R range;
+        private R range = void;
 
         this(in R range)
         {
