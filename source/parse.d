@@ -115,7 +115,7 @@ auto resettableRange(R)(auto ref R range)
     static if(isLookaheadRange!R){
         return ResettableRange!R(range);
     }else{
-        return ResettableRange!(LookaheadRange!R)(range.lookaheadRange);
+        return range.lookaheadRange.resettableRange;
     }
 }
 
