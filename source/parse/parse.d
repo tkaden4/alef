@@ -11,6 +11,13 @@ import std.variant;
 import lex : lex, Token;
 import util;
 
+/* TODO
+   1. Add error information
+   2. Track line numbers
+   3. Optimize through richer metadata about parsing rules
+ */
+
+/* XXX too specific */
 alias TokenRange = LookaheadRange!(typeof("".lex));
 
 template isTokenRange(R)
@@ -25,6 +32,7 @@ auto parse(R)(auto ref R inputRange)
     return range.parseProgram;
 }
 
+/* XXX too specific */
 auto parseToken(Token.Type type)(ref TokenRange range)
 {
     enforce(
@@ -37,6 +45,7 @@ auto parseToken(Token.Type type)(ref TokenRange range)
 auto parseOr(Args...)(ref TokenRange range)
 {
     auto result = Algebraic!(staticMap!(ReturnType, Args))();
+    auto nrange = range.resetRange;
     return result;
 }
 
@@ -57,9 +66,9 @@ auto parseN(size_t n, alias rule)(ref TokenRange range)
 {
     ReturnType!rule[] results;
     results.reserve(n);
-    iota(0, n).each!({
+    foreach(_; 0 .. n){
         results ~= rule(range);
-    });
+    }
     return results;
 }
 
@@ -71,6 +80,10 @@ auto parseAnyAmount(alias rule)(ref TokenRange range)
         try {
             results ~= result.get!0;
         } catch(VariantException e) {
+            debug {
+                import std.stdio;
+                "optional was null".writeln;
+            }
             break;
         }
     }
@@ -91,5 +104,5 @@ auto parseProgram(ref TokenRange range)
 
 auto parseExpression(ref TokenRange range)
 {
-    return "expression";
+    return tuple("string");
 }

@@ -1,4 +1,4 @@
-module type;
+module tree.type;
 
 interface ASTType {
 static:

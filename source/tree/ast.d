@@ -1,6 +1,6 @@
-module ast;
+module tree.ast;
 
-import type;
+import tree.type;
 
 struct SourceLocation {
     string file;

@@ -3,6 +3,7 @@ module util;
 import std.conv;
 import std.range;
 import std.algorithm;
+import std.functional;
 import std.traits;
 import std.stdio;
 
@@ -14,7 +15,7 @@ public import util.meta;
 /* Utility Functions */
 
 public auto ariaticMap(alias fn, R)(auto ref R range)
-    if(isSomeFunction!fn)
+    if(isCallable!fn)
 {
     return range.chunk!(arity!fn).map!(x => fn(x.expand));
 }
