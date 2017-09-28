@@ -119,8 +119,6 @@ auto resettableRange(R)(auto ref R range)
     }
 }
 
-alias Range = ResettableRange!TokenRange;
-
 auto parse(R)(auto ref R inputRange)
     if(isInputRange!R)
 {

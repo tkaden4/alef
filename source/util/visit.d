@@ -74,7 +74,6 @@ auto visitSwitch(T, Args...)(auto ref T t, Args args)
     }
 }
 
-
 unittest
 {
     auto fnVis =
