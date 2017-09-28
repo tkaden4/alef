@@ -13,6 +13,32 @@ public import util.meta;
 
 /* Utility Functions */
 
+public auto ariaticMap(alias fn, R)(auto ref R range)
+    if(isSomeFunction!fn)
+{
+    return range.chunk!(arity!fn).map!(x => fn(x.expand));
+}
+
+public auto chunk(size_t n, R)(auto ref R range)
+{
+    import std.typecons;
+    import std.meta : Repeat;
+    alias TupleType = Tuple!(Repeat!(n, ElementType!R));
+    /* string mixins, amirite? */
+    mixin("return range.chunks(n).map!(x => TupleType(" ~ expandArray!("x", n) ~ "));");
+}
+
+unittest
+{
+    auto testRange = [1, 2, 3, 4];
+    int plus(int a, int b)
+    {
+        return a + b;
+    }
+    import std.stdio;
+    assert(testRange.ariaticMap!plus.array == [3, 7]);
+}
+
 /* evaluate pred with the front of range and the value as arguments,
  * throwing an instance of E on failure, and popping and returning the
  * front of the range on success */

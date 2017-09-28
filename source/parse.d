@@ -1,7 +1,8 @@
 module parse;
 
 import std.range;
-import std.exception; import std.string;
+import std.exception;
+import std.string;
 import std.typecons;
 import std.meta;
 import std.traits;
@@ -48,6 +49,7 @@ auto parseAnd(Args...)(ref TokenRange range)
     return result;
 }
 
+/* some helpful aliases */
 alias parseAtLeastN(size_t n, alias rule) = parseAnd!(parseN!(n, rule), parseAnyAmount!rule);
 alias parseOptional(alias rule) = parseOr!(rule, nothingRule);
 
@@ -55,9 +57,9 @@ auto parseN(size_t n, alias rule)(ref TokenRange range)
 {
     ReturnType!rule[] results;
     results.reserve(n);
-    foreach(_; 0 .. n){
+    iota(0, n).each!({
         results ~= rule(range);
-    }
+    });
     return results;
 }
 
@@ -75,8 +77,10 @@ auto parseAnyAmount(alias rule)(ref TokenRange range)
     return results;
 }
 
+/* always returns */
 auto nothingRule(ref TokenRange range)
 {
+    /* XXX consider not making it an empty tuple */
     return tuple();
 }
 
