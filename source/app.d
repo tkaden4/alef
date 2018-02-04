@@ -8,7 +8,7 @@ import std.file;
 
 import util;
 
-enum usage = "Usage: alephc [-o <out>] <*.al>...";
+enum usage = "Usage: alefc [-o <out>] <*.al>...";
 
 auto compile(R)(auto ref R files)
     if(isInputRange!R && isSomeString!(ElementType!R))
