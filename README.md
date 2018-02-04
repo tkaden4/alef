@@ -1,4 +1,4 @@
-# Aleph #
+# Alef #
 
 Aleph is a high-level programming language designed to act as a Better C. C is
 still a useful tool, but certain processes can be tedious or downright impossible
