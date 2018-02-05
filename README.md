@@ -7,7 +7,7 @@ inspired by [C2](http://c2lang.org/).
 
 Rust imposes a lifetime system upon you, which although good for overall
 safety, can be a burden at times. D comes with a garbage collector.
-C++ is too tightly coupled with C for any progress to be made. 
+C++ is tightly coupled with C, and has terrible errors.
 
 ## Improvements over C (Work in progress)
 - CTFE (Compile-time function execution)
