@@ -1,11 +1,9 @@
 {
-	"name": "alephc",
+	"name": "alefc",
 	"authors": [
-		"kaden"
+		"Kaden Thomas"
 	],
-	"description": "A programming language",
+	"description": "A Better C",
 	"copyright": "Copyright © 2017, kaden",
-	"license": "proprietary",
-    "dependencies": {
-    }
+	"license": "MIT License"
 }
