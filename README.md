@@ -1,8 +1,13 @@
 # Alef #
 
-Alef is a replacement for the C programming language. It does not look to impose any new concepts like
-lifetimes (Rust), object orientation (C++), or garbage collection (D/Java), but rather offer a clean,
-modern version of C that is easily integratable into existing projects.
+Alef is a modern, clean replacement for the C programming language
+inspired by [C2](http://c2lang.org/).
+
+## Why not Rust/D/C++?
+
+Rust imposes a lifetime system upon you, which although good for overall
+safety, can be a burden at times. D comes with a garbage collector.
+C++ is too tightly coupled with C for any progress to be made. 
 
 ## Improvements over C (Work in progress)
 - CTFE (Compile-time function execution)
@@ -10,9 +15,13 @@ modern version of C that is easily integratable into existing projects.
 - Strong + Static typing
 - Module system
 
+## Improvements over C2 (Work in progress)
+- Named "Alef"
+
 ## Goals
 - Higher Kinded Types
 - Closures
 - Type inference
 - Traits
 - LLVM/RTL Targets
+- Integrated C compiler
