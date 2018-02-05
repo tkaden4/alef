@@ -1,18 +1,18 @@
 DFLAGS=-debug
-build:
+EXE=alefc
+all:
 	dub build $(DFLAGS)
 
 clean:
 	dub clean
 
-.PHONY: tst
 tst:
 	dub test
 
-.PHONY: unit
 unit:
-	find test/**/*.al | xargs -n1 ./alephc
+	find test/**/*.al | xargs -n1 ./$(EXE)
 
-.PHONY: run
 run:
-	./alephc test/main.al
+	./$(EXE) --repl
+
+.PHONY: tst unit clean run
