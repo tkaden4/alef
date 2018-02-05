@@ -1,12 +1,18 @@
 # Alef #
 
-Alef is a high-level programming language designed to act as a Better C. C is
-still a useful tool, but certain processes can be tedious or downright impossible
-in C. This language looks to fill the gaps while not sacrificing compatibility,
-speed, or portability; it compiles to C itself.
+Alef is a replacement for the C programming language. It does not look to impose any new concepts like
+lifetimes (Rust), object orientation (C++), or garbage collection (D/Java), but rather offer a clean,
+modern version of C that is easily integratable into existing projects.
 
-## Current Goals ##
-- [ ] Finish Lexer
-- [ ] Finish Parser
-- [ ] Finish pattern matcher
-- [ ] Semantic Analyzer
+## Improvements over C (Work in progress)
+- CTFE (Compile-time function execution)
+- REPL for quick testing
+- Strong + Static typing
+- Module system
+
+## Goals
+- Higher Kinded Types
+- Closures
+- Type inference
+- Traits
+- LLVM/RTL Targets
