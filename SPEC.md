@@ -1,5 +1,7 @@
 # Specification
 
+// TODO incorporate memory management
+
 ## Types
 ### Primitive Types
 `iN` - integers in the N bit range
@@ -33,7 +35,7 @@ let bar (x of i32) (y of i32) of i32 = x + y
 ### Local Bindings
 ```
 // print and x are not available after "print x"
-let print (n of int32) of unit = std.int32.print n in
+let print (n of int32) of unit = std.io.println (std.int.to_string n) in
 let x of i32 = 8 in
   print x
 ```
@@ -53,10 +55,10 @@ let y of !i32 = 8 in
 
 ## Modules
 ```
-// main.al
+// john.al
 module John
 
-let name of *u8 = "John"
+let name of \*u8 = "John"
 let age of i32 = 32
 
 // foo.al
@@ -71,14 +73,14 @@ Symbols can be fully qualified, or imported
 
 ```
 // print "0" to the string
-std.int.to_string 0 |> std.io.println
+std.io.println (std.int.to\_string 0)
 
 // or
 
-use std.int.{to_string}
+use std.int.{to\_string}
 use std.io.{println}
 
-to_string 0 |> println
+to\_string 0 |> println
 
 ```
 
