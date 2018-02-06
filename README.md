@@ -1,27 +1,31 @@
 # Alef #
 
 Alef is a modern, clean replacement for the C programming language
-inspired by [C2](http://c2lang.org/).
+inspired by [C2](http://c2lang.org/), Rust, and OCaml.
 
-## Why not Rust/D/C++?
+Alef is a *work in progress*, and breaking changes will made frequently.
 
-Rust imposes a lifetime system upon you, which although good for overall
-safety, can be a burden at times. D comes with a garbage collector.
-C++ is tightly coupled with C.
+See SPEC.md for the specification
 
-## Improvements over C (Work in progress)
+### Improvements over C (Work in progress)
 - CTFE (Compile-time function execution)
-- REPL for quick testing
-- Strong + Static typing
+- REPL for rapid prototyping and testing
+- Strong typing
 - Module system
 
-## Improvements over C2 (Work in progress)
-- Named "Alef"
-
-## Goals
+### Goals
 - Higher Kinded Types
 - Closures
 - Type inference
 - Traits
 - LLVM/RTL Targets
 - Integrated C compiler
+
+### Usage
+launch REPL
+
+`alefc --repl`
+
+compile files
+
+`alefc -o main main.al ...`
