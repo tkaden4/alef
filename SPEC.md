@@ -58,7 +58,7 @@ let y of !i32 = 8 in
 // john.al
 module John
 
-let name of \*u8 = "John"
+let name of *u8 = "John"
 let age of i32 = 32
 
 // foo.al
@@ -73,14 +73,14 @@ Symbols can be fully qualified, or imported
 
 ```
 // print "0" to the string
-std.io.println (std.int.to\_string 0)
+std.io.println (std.int.to_string 0)
 
 // or
 
-use std.int.{to\_string}
+use std.int.{to_string}
 use std.io.{println}
 
-to\_string 0 |> println
+to_string 0 |> println
 
 ```
 
