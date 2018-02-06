@@ -3,12 +3,16 @@
 ## Types
 ### Primitive Types
 `iN` - integers in the N bit range
+
 `uN` - unsigned integers in the N bit range
+
 `fN` - floating point numbers in the N bit range
 
 ### Compound Types
 `(A, B)` - tuples, or the product of two types A and B
+
 `[A]` - lists, or sequentially ordered collections of values
+
 `{ foo of A, bar of B ... }` - records, or groups of named fields of different types
 
 ### Disjoint Types
@@ -16,6 +20,7 @@
 
 ### Type Declaration
 `type n = A` - create a new type of name n and specifier A
+
 `alias n = B` - create an alias, effectively replacing usages of n with B
 
 ## Bindings
@@ -79,4 +84,5 @@ to_string 0 |> println
 
 ### Access Specifiers 
 All symbols are private to the module by default
+
 `export` - export the symbol from the module
